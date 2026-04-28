@@ -126,7 +126,7 @@ images/*.jpg → shuffled_images/  → Darknet Train  → OpenCV DNN    → pynp
 | 类别数 | 3（assaulter, freezer, heater） |
 | 训练超参 | batch=64, subdivisions=16, lr=0.00261, max_batches=6000 |
 
-采用**迁移学习**，基于 COCO/ImageNet 预训练的 `yolov4-tiny.conv.29`（29 层卷积骨干），仅微调检测头。
+采用**迁移学习**：backbone 使用 COCO/ImageNet 预训练的 `yolov4-tiny.conv.29`（29 层卷积骨干）权重进行初始化，而非随机初始化；YOLO 检测头从零开始随机初始化。所有层在训练过程中共同进行全模型微调（cfg 中未设置 `stopbackward=1`，未冻结任何层）。
 
 ---
 
@@ -183,7 +183,7 @@ images/*.jpg → shuffled_images/  → Darknet Train  → OpenCV DNN    → pynp
 
 3. **模板方法模式：** `LabelUtils.update_config_files()` 用字符串占位符实现配置代码生成。
 
-4. **迁移学习：** 训练阶段冻结卷积骨干（`yolov4-tiny.conv.29`），仅重训练检测头。
+4. **迁移学习：** 训练阶段 backbone 用 `yolov4-tiny.conv.29` 预训练权重初始化（非随机），检测头随机初始化；所有层共同进行全模型微调，未冻结任何层。
 
 5. **两帧速度预测：** Notebook 5 采用帧差法计算物体速度，预测未来位置——一种 ad-hoc 运动预测模式。
 
